@@ -13,7 +13,10 @@ export interface GaussianBackgroundProps extends HTMLAttributes<HTMLDivElement>{
     renderWidth?: number;
     /** 建议取实际值的十分之一左右 */
     renderHeight?: number;
+    canvasClassName?: string;
     canvasProps?: HTMLAttributes<HTMLCanvasElement>;
+    contentClassName?: string;
+    contentProps?: HTMLAttributes<HTMLDivElement>
 }
 
 const defaultLayers: Layer[] = [
@@ -60,7 +63,10 @@ const GaussianBackground = ({
     options,
     renderWidth,
     renderHeight,
+    canvasClassName,
     canvasProps,
+    contentClassName,
+    contentProps,
     children,
     ...props
 }: GaussianBackgroundProps) => {
@@ -79,8 +85,10 @@ const GaussianBackground = ({
 
     return (
         <Container {...props}>
-            <StyledCanvas ref={ref} {...canvasProps} />
-            <Content>{children}</Content>
+            <StyledCanvas ref={ref} className={canvasClassName} {...canvasProps} />
+            <Content className={contentClassName} {...contentProps}>
+                {children}
+            </Content>
         </Container>
     );
 };
