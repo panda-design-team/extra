@@ -1,20 +1,16 @@
-import gaussianBackgroundGenerator, {
-    GaussianBackground as GaussianBackgroundType,
-    Layer as GaussianBackgroundLayer,
-    Options as GaussianBackgroundOptions,
-    BlurMethod as  GaussianBackgroundBlurMethod,
-} from 'gaussian-background-generator';
-import GaussianBackground, {GaussianBackgroundProps} from './gaussian-background';
+import LeftNavigation from './LeftNavigation';
+import {
+    LeftNavigationProps,
+    LeftNavigationMenuItem,
+    LeftNavigationDividerItem
+} from './LeftNavigation/interface';
 
 export type {
-    GaussianBackgroundBlurMethod,
-    GaussianBackgroundProps,
-    GaussianBackgroundType,
-    GaussianBackgroundLayer,
-    GaussianBackgroundOptions
+    LeftNavigationProps,
+    LeftNavigationMenuItem,
+    LeftNavigationDividerItem
 }
 
 export {
-    gaussianBackgroundGenerator,
-    GaussianBackground
+    LeftNavigation
 }
