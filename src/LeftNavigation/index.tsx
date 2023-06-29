@@ -25,7 +25,7 @@ const Container = styled.div<ContainerProps>`
     background-color: ${colors['gray-2']};
     border-right: 1px solid ${colors['gray-4']};
     overflow: hidden;
-    transition: all 0.3s;
+    transition: width 0.3s;
 
     svg {
         font-size: 20px;
@@ -38,6 +38,7 @@ const WidthPlaceholder = styled.div<ContainerProps>`
         ? 'var(--devops-left-navigator-width-collapsed, 50px)'
         : 'var(--devops-left-navigator-width-expanded, 160px)'
     )};
+    transition: width 0.3s;
 `;
 
 // keep file，后续开发新版侧边栏

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import {colors} from '@panda-design/components';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {useCallback, useMemo} from 'react';
+import {useCallback, useLayoutEffect, useMemo, useRef} from 'react';
 import {Tooltip} from 'antd';
 import {LeftNavigationMenuItem} from './interface';
 
@@ -21,6 +21,7 @@ const Container = styled.div<ContainerProps>`
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
+    transition: height 0.3s;
 
     color: ${props => (props.isActive ? colors.black : colors['gray-8'])};
     background-color: ${props => (props.isActive ? backgroundActive : 'unset')};
@@ -35,20 +36,17 @@ interface StyleProps {
 }
 
 // 使用绝对定位获得更优的动画效果，unset 可能导致闪烁，需要再调整
-const IconContainer = styled.div<StyleProps>`
+const IconContainer = styled.div`
     position: absolute;
-    left: ${props => (props.collapsed ? '15px' : '15px')};
+    left: 15px;
     top: 8px;
-    //transition: all 0.3s;
 `;
 
 const TitleContainer = styled.div<StyleProps>`
     position: absolute;
     top: ${props => (props.collapsed ? '30px' : '9px')};
-    // TODO 计算 left 位置
-    left: ${props => (props.collapsed ? 'unset' : '40px')};
     font-size: ${props => (props.collapsed ? '12px' : '14px')};
-    transition: top 0.3s, left 0.3s, font-size 0.3s;
+    transition: top 0.3s, left 0.3s;
 `;
 
 interface Props {
@@ -58,19 +56,40 @@ interface Props {
 }
 
 const MenuItem = ({collapsed, item}: Props) => {
+    const titleContainerRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
     const navigate = useNavigate();
     const {
         to,
         icon,
         title,
-        shortTitle,
+        shortTitle = title,
         className,
         style,
         onClick,
         tooltip,
     } = item;
     const isActive = item.isActive ?? location.pathname === to;
+
+    useLayoutEffect(
+        () => {
+            if (titleContainerRef.current) {
+                const {width} = titleContainerRef.current?.getBoundingClientRect() ?? {};
+                if (collapsed) {
+                    if (width) {
+                        titleContainerRef.current.style.left = String(25 - width / 2) + 'px';
+                    }
+                    else {
+                        titleContainerRef.current.style.left = 'unset';
+                    }
+                }
+                else {
+                    titleContainerRef.current.style.left = '40px';
+                }
+            }
+        },
+        [collapsed]
+    );
 
     const handleClick = useCallback(
         () => {
@@ -103,8 +122,13 @@ const MenuItem = ({collapsed, item}: Props) => {
                 style={style as any}
                 onClick={handleClick}
             >
-                <IconContainer collapsed={collapsed}>{icon}</IconContainer>
-                <TitleContainer collapsed={collapsed}>{collapsed ? shortTitle : title}</TitleContainer>
+                <IconContainer>{icon}</IconContainer>
+                <TitleContainer
+                    ref={titleContainerRef}
+                    collapsed={collapsed}
+                >
+                    {collapsed ? shortTitle : title}
+                </TitleContainer>
             </Container>
         </Tooltip>
     );
